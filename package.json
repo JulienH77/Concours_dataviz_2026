@@ -1,0 +1,11 @@
+{
+  "name": "concours-dataviz-2026",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/core.test.js && python tests/data_checks.py",
+    "serve": "python -m http.server 8000",
+    "prepare-data": "python scripts/prepare.py",
+    "test:ui": "node tests/ui.test.mjs"
+  }
+}
