@@ -1,9 +1,10 @@
-name: Import des donnees et des cinq prototypes
+name: Import des donnees originales et calculs des cinq prototypes
 on:
   push:
     branches: [main]
     paths:
-      - '.github/import-transfer/ready'
+      - '.github/workflows/import-project.yml'
+      - 'scripts/import_originals.py'
 permissions:
   contents: write
 concurrency:
@@ -12,49 +13,31 @@ concurrency:
 jobs:
   import:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           fetch-depth: 1
-      - name: Verifier et extraire le projet
-        shell: bash
+      - name: Recuperer les sept originaux et verifier leurs SHA-256
+        run: python3 scripts/import_originals.py
+      - name: Preparer les calculs reproductibles
         run: |
-          python3 - <<'PY'
-          import base64, hashlib, io, json, shutil, zipfile
-          from pathlib import Path
-          root = Path.cwd()
-          parts = sorted((root/'.github/import-transfer').glob('*.b64'))
-          if len(parts) != 161:
-              raise RuntimeError(f'Nombre de fragments incorrect: {len(parts)}')
-          payload = base64.b64decode(''.join(p.read_text().strip() for p in parts), validate=True)
-          if hashlib.sha256(payload).hexdigest() != '9fd4ff9197bc3bcf6166d82033da98e44c5f0423296731b8b5305a862659dd7e':
-              raise RuntimeError('Archive corrompue')
-          with zipfile.ZipFile(io.BytesIO(payload)) as z:
-              if len(z.namelist()) != 302 or z.testzip() is not None:
-                  raise RuntimeError('Archive invalide')
-              for name in z.namelist():
-                  if not (root/name).resolve().is_relative_to(root):
-                      raise RuntimeError('Chemin interdit')
-              z.extractall(root)
-          for item in json.loads((root/'DONNEES/manifest.json').read_text()):
-              data = (root/item['path']).read_bytes()
-              if len(data) != item['bytes'] or hashlib.sha256(data).hexdigest() != item['sha256']:
-                  raise RuntimeError('Donnee originale alteree: '+item['path'])
-          for slug in ['01-pouls','02-memoire','03-calendrier','04-adn','05-deux-visages']:
-              assert (root/'idees'/slug/'index.html').is_file()
-          shutil.rmtree(root/'.github/import-transfer')
-          (root/'.github/workflows/import-project.yml').unlink()
-          print('302 fichiers verifies; originaux et cinq prototypes installes.')
-          PY
-      - name: Enregistrer les fichiers dans main
-        shell: bash
+          python3 -m venv /tmp/concours-python
+          /tmp/concours-python/bin/python -m pip install numpy==2.3.5 pandas==2.2.3 scipy==1.17.0
+          /tmp/concours-python/bin/python scripts/prepare.py
+          /tmp/concours-python/bin/python scripts/pages.py
+      - name: Verifier les donnees et le code
+        run: |
+          node --test tests/core.test.js
+          /tmp/concours-python/bin/python tests/data_checks.py
+      - name: Enregistrer les donnees et supprimer le workflow temporaire
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add --all
+          git rm .github/workflows/import-project.yml
+          git add DONNEES data ANALYSE.json index.html idees assets/favicon.svg
           git diff --cached --check
           if ! git diff --cached --quiet; then
-            git commit -m "Install original DONNEES and five DataGrandEst 2026 prototypes"
+            git commit -m "Import verified original datasets and generated data for all five prototypes"
             git push origin HEAD:main
           fi
