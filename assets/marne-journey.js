@@ -146,7 +146,7 @@ function render() {
   $('distance-label').textContent=`${Math.round(routeLength*progress/100)} km parcourus`;
   const nearest=nearestStation(progress);$('console-caption')?.remove();
   $('journey-caption').textContent=holdingUntil>performance.now()&&activeStop>=0?`Halte à ${stops[activeStop].city}`:progress>=99.9?'La Marne quitte le Grand Est':'Le bateau suit le courant';
-  $('console-hint').textContent=holdingUntil>performance.now()?'La rivière continue de vivre pendant la halte':playing?'Le voyage avance, le calendrier aussi':'Choisissez un point ou lancez la dérive';
+  $('console-hint').textContent=playing&&holdingUntil>performance.now()?'La rivière continue de vivre pendant la halte':playing?'Le voyage avance, le calendrier aussi':'Choisissez un point ou lancez la dérive';
   $('journey-toggle').classList.toggle('is-playing',playing);$('journey-toggle').setAttribute('aria-label',playing?'Mettre le voyage en pause':'Lancer le voyage');$('journey-toggle').querySelector('.toggle-icon').textContent=playing?'Ⅱ':'▶';
   const weatherKey=`${monthIndex()}-${year}-${nearestStation(progress).id}`;
   if(weatherKey!==lastWeatherKey){renderWeather();lastWeatherKey=weatherKey;}
@@ -155,9 +155,9 @@ function frame(now) {
   if(lastFrame){const dt=Math.min(80,now-lastFrame)/1000;if(playing){elapsed+=dt*speed;const waiting=now<holdingUntil;if(!waiting){if(activeStop>=0){activeStop=-1;updateCard(true);}const before=progress;progress=Math.min(100,progress+dt*.55*speed);for(let i=0;i<stops.length;i++){const s=stops[i];if(before<s.at&&progress>=s.at){progress=s.at;activeStop=i;holdingUntil=now+HOLD_SECONDS*1000;updateCard();break;}}if(progress>=100){playing=false;holdingUntil=0;updateCard(true);}}}}
   lastFrame=now;render();requestAnimationFrame(frame);
 }
-function jumpTo(value) { progress=clamp(value,0,100);holdingUntil=0;activeStop=-1;playing=false;manual=true;updateCard(true);render(); }
+function jumpTo(value) { progress=clamp(value,0,100);holdingUntil=0;activeStop=-1;playing=false;updateCard(true);render(); }
 async function start() {
-  try { const [response,deptResponse]=await Promise.all([fetch(DATA_URL),fetch(DEPT_URL)]); if(!response.ok||!deptResponse.ok)throw new Error('Données introuvables'); [data,data.departements]=await Promise.all([response.json(),deptResponse.json()]); }
+  try { const [response,deptResponse]=await Promise.all([fetch(DATA_URL),fetch(DEPT_URL)]); if(!response.ok||!deptResponse.ok)throw new Error('Données introuvables'); const [hydro,departments]=await Promise.all([response.json(),deptResponse.json()]);data=hydro;data.departements=departments; }
   catch(error){console.error(error);$('weather-summary').textContent='Les données de la rivière n’ont pas pu être chargées.';return;}
   initRoute();buildStations();drawMap();
   for(let y=2000;y<=2026;y++){const option=document.createElement('option');option.value=y;option.textContent=y;$('year-select').append(option);}
