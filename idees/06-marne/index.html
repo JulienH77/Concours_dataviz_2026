@@ -1,41 +1,80 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#edf2e9">
-  <meta name="description" content="Suivez la Marne de sa source au fil des stations hydrométriques et météorologiques du Grand Est.">
-  <title>La Marne au fil de l’eau · DataGrandEst 2026</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#dce9de">
+  <meta name="description" content="Une traversée animée de la Marne, de sa source à la limite du Grand Est, au rythme des stations et des saisons.">
+  <title>La Marne, rivière vivante · Les rythmes de l’eau</title>
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../assets/style.css"><link rel="stylesheet" href="../../assets/ideas-plus.css">
+  <link rel="stylesheet" href="../../assets/style.css">
+  <link rel="stylesheet" href="../../assets/marne-journey.css">
 </head>
-<body class="marne-page">
-<div class="shell">
-  <header class="topbar"><a class="brand" href="../../index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C12 11 5 16 5 22a11 11 0 0 0 22 0C27 16 20 11 16 3Z" fill="#137d85"/><path d="M7 22c4-6 10 6 18 0" stroke="#fffefa" stroke-width="2" fill="none"/></svg> Les rythmes de l’eau</a><div class="toplinks"><a href="../07-pouls-villes/">Les battements du Grand Est ↗</a><a href="../../METHODOLOGIE.md">Méthodologie</a></div></header>
-  <main class="plus-shell">
-    <div class="plus-kicker">Piste 06 · une traversée racontée par les données</div>
-    <div class="marne-heading"><div><h1>La Marne,<br><em>au fil de l’eau.</em></h1><p class="plus-lede">De la source au nord de la Haute-Marne, une feuille dérive entre les stations. À chaque halte, la rivière rencontre la météo de ce mois-là.</p></div><div class="year-box"><label for="year">Année observée</label><select id="year"></select><small>Les mesures fournies sont hebdomadaires, regroupées ici par mois.</small></div></div>
-    <section class="river-layout">
-      <div class="river-map panel-plus">
-        <div class="plus-panel-head"><div><span class="eyebrow">La source et son bassin</span><h2>Un voyage vers l’aval</h2></div><button class="map-reset" id="map-reset" type="button">Revenir à la source</button></div>
-        <div class="map-frame"><svg id="river-map" viewBox="0 0 700 700" role="img" aria-label="Carte de la Marne et des stations de mesure"><defs><linearGradient id="water" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#a8c5a8"/><stop offset="1" stop-color="#dce8d7"/></linearGradient><filter id="soft"><feGaussianBlur stdDeviation="3"/></filter></defs><rect width="700" height="700" fill="#edf2e9"/><g id="departments"></g><g id="river-lines"></g><path id="journey-line" class="journey-line"/><g id="weather"></g><g id="stops"></g><g id="traveller" aria-hidden="true"></g><g id="map-labels"></g></svg></div>
-        <div class="map-legend"><span><i class="legend-dot source-dot"></i>Source</span><span><i class="legend-dot station-dot"></i>Station suivie</span><span><i class="legend-dot no-data-dot"></i>Station sans débit exploitable</span></div>
-      </div>
-      <aside class="river-info">
-        <div class="stop-card panel-plus"><div class="stop-top"><span class="eyebrow" id="stop-kind">Point de départ</span><span class="month-pill" id="month-label">FÉVRIER</span></div><h2 id="stop-title">La source de la Marne</h2><p id="stop-note" class="stop-note"></p><div id="station-warning" class="station-warning"></div>
-          <div class="big-flow"><strong id="flow-value">—</strong><span id="flow-label">Débit médian mensuel · unité de source</span></div><div class="small-flow-note">Le débit est ramené à sa médiane historique pour l’animation et la comparaison. Le chiffre brut reste consultable.</div>
-        </div>
-        <div class="weather-card panel-plus"><div class="plus-panel-head"><div><span class="eyebrow">Ce mois autour de la station</span><h2>Le temps sur les rives</h2></div></div><div class="weather-grid">
-          <div class="weather-metric"><span class="metric-icon temp-icon">°</span><div><strong id="temp">—</strong><span>température moyenne</span></div></div>
-          <div class="weather-metric"><span class="metric-icon rain-icon">↘</span><div><strong id="rain">—</strong><span>pluie cumulée</span></div></div>
-          <div class="weather-metric"><span class="metric-icon snow-icon">✳</span><div><strong id="snow">—</strong><span>neige cumulée</span></div></div>
-          <div class="weather-metric"><span class="metric-icon soil-icon">≈</span><div><strong id="soil">—</strong><span>humidité du sol</span></div></div>
-        </div><p class="weather-caption" id="weather-caption">Les effets animés illustrent les valeurs mensuelles fournies.</p></div>
-        <div class="river-chart panel-plus"><div class="plus-panel-head"><div><span class="eyebrow">La série mensuelle</span><h2>Le débit suit son cours</h2></div></div><svg id="month-chart" viewBox="0 0 500 120" role="img" aria-label="Débit mensuel relatif à la médiane de la station"></svg><div class="chart-legend"><span><i class="chart-line"></i>Rapport à la médiane de la station</span><span>1 = médiane</span></div></div>
-      </aside>
+<body class="marne-journey-page">
+  <main class="marne-stage" id="marne-stage">
+    <svg class="living-map" id="living-map" role="img" aria-label="Carte animée de la Marne, de sa source vers la limite du Grand Est" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <pattern id="map-grain" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="3" r=".7" fill="#537868" opacity=".12"/><circle cx="15" cy="18" r=".55" fill="#537868" opacity=".1"/></pattern>
+        <filter id="soft-weather" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="7"/></filter>
+        <filter id="boat-shadow" x="-80%" y="-80%" width="260%" height="260%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#214c45" flood-opacity=".28"/></filter>
+        <linearGradient id="river-water" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8bbdb1"/><stop offset=".52" stop-color="#57a5a1"/><stop offset="1" stop-color="#347f88"/></linearGradient>
+      </defs>
+      <rect id="map-ground" class="map-ground"/><rect id="map-texture" fill="url(#map-grain)" opacity=".5"/>
+      <g id="world">
+        <g id="departments"></g><g id="river-underlay"></g><g id="river-streams"></g>
+        <g id="weather-field"></g><g id="station-points"></g><g id="city-points"></g>
+      </g>
+    </svg>
+    <div class="map-tint" aria-hidden="true"></div>
+
+    <header class="journey-header">
+      <a class="journey-brand" href="../../index.html" aria-label="Retour aux rythmes de l’eau"><span class="brand-mark">≈</span><span>Les rythmes<br>de l’eau</span></a>
+      <div class="journey-title"><span>Une traversée, une année</span><h1>La Marne <i>vivante</i></h1></div>
+      <div class="header-right"><span class="live-pill"><i></i> UNE RIVIÈRE, AU FIL DES SAISONS</span><a class="other-idea" href="../07-pouls-villes/">Voir les battements du Grand Est ↗</a></div>
+    </header>
+
+    <div class="map-status"><span id="place-label">La source · Balesmes-sur-Marne</span><span class="status-separator">/</span><span id="distance-label">0 km parcourus</span></div>
+    <div class="north-mark" aria-label="Nord">N <span>↑</span></div>
+
+    <section class="town-card" id="town-card" aria-live="polite" aria-atomic="true" hidden>
+      <div class="town-card-kicker"><span id="town-index">HALTE 01</span><span class="town-card-line"></span><span>LA MARNE S’ARRÊTE</span></div>
+      <h2 id="town-name">Langres</h2><p id="town-note"></p>
     </section>
-    <section class="journey-controls panel-plus"><div class="journey-control-top"><div><span class="eyebrow">Faire dériver la feuille</span><h2>Du plateau de Langres à la Champagne</h2></div><button id="play" class="play-button" type="button"><span>▶</span> Faire le voyage</button></div><div class="range-wrap"><input id="progress" type="range" min="0" max="1000" value="0" aria-label="Progression le long de la Marne"><div class="range-ends"><span>Source · Balesmes-sur-Marne</span><span>En aval</span></div><div id="stop-markers" class="stop-markers" aria-hidden="true"></div></div><div class="journey-foot"><span id="journey-status">En attente au départ</span><span>Fais glisser le curseur ou lance le voyage</span></div></section>
-    <details class="method-plus"><summary>Stations, calculs et limites</summary><div><p>La Marne prend sa source à Balesmes-sur-Marne, près de Langres. Langres est un repère géographique proche : la rivière ne traverse pas la ville et le jeu de données ne fournit pas de station à Langres. La première station avec un débit exploitable sur ce tronçon est Marnay-sur-Marne. Au niveau de Chaumont, la page utilise la station de Condes (série disponible) ; la station Chaumont-Reclancourt est très lacunaire. Les arrêts de Joinville et de la Chaussée-sur-Marne restent affichés mais leurs débits manquent dans le fichier.</p><p>Chaque valeur mensuelle résume les semaines disponibles de l’année choisie, rattachées au mois de leur date de début (lundi) : médiane pour le débit, température et humidité moyennes, somme des cumuls hebdomadaires pour pluie et neige. Une absence n’est jamais remplacée par zéro. Les chiffres de débit brut sont consultables, mais le graphe privilégie leur rapport à la médiane historique de la station, car l’échelle brute du fichier est signalée comme à vérifier dans la méthodologie du dépôt.</p><p>La géométrie provient du fichier des cours d’eau fourni au concours et est simplifiée pour l’affichage. Les effets de pluie (cumul mensuel supérieur à 10 mm), de neige (cumul supérieur à 0) et de brume de sol (humidité moyenne supérieure à 20 mm) sont une mise en scène des valeurs du mois observé : ils ne constituent ni une prévision météo ni une mesure visuelle de l’intensité réelle.</p></div></details>
+
+    <div class="traveller" id="traveller" aria-label="Bateau vu du dessus, avec une personne à bord">
+      <svg viewBox="-32 -46 64 92" aria-hidden="true">
+        <ellipse cx="0" cy="4" rx="25" ry="41" fill="#f5e7c9" opacity=".34"/>
+        <path class="boat-hull" d="M0-40C-8-31-18-13-19 10C-20 28-10 39 0 42C10 39 20 28 19 10C18-13 8-31 0-40Z" fill="#b97650" stroke="#694a37" stroke-width="2.4"/>
+        <path d="M0-33C-5-20-11-3-11 14C-11 25-6 32 0 35C6 32 11 25 11 14C11-3 5-20 0-33Z" fill="#dca579" stroke="#f4d5b3" stroke-width="1.1"/>
+        <path d="M-11 15Q0 20 11 15" fill="none" stroke="#694a37" stroke-width="1.8"/>
+        <circle cx="0" cy="0" r="6.2" fill="#d8a479" stroke="#fff2dd" stroke-width="1.4"/>
+        <path d="M0 7V19M-1 10L-8 16M1 10L8 16M-1 18L-5 27M1 18L5 27" fill="none" stroke="#304e4d" stroke-width="3.1" stroke-linecap="round"/>
+        <path d="M-22-13q-7 6 0 12M22-13q7 6 0 12" fill="none" stroke="#edf7e9" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+      </svg>
+    </div>
+
+    <aside class="weather-readout" aria-live="polite">
+      <div class="weather-readout-top"><span id="weather-station">Station proche</span><span class="weather-pulse"></span></div>
+      <div class="weather-summary" id="weather-summary">Le paysage attend les premières gouttes.</div>
+      <div class="weather-values">
+        <div><span>TEMPÉRATURE</span><strong id="temp-value">—</strong></div><div><span>PLUIE</span><strong id="rain-value">—</strong></div><div><span>NEIGE</span><strong id="snow-value">—</strong></div><div><span>SOL</span><strong id="soil-value">—</strong></div><div><span>DÉBIT</span><strong id="flow-value">—</strong></div>
+      </div>
+      <small class="weather-foot" id="weather-foot">Mesures mensuelles · séries 2000–2026</small>
+    </aside>
+
+    <div class="weather-legend"><span><i class="legend-rain">╱</i>pluie</span><span><i class="legend-snow">✳</i>neige</span><span><i class="legend-mist"></i>sol humide</span></div>
+    <button class="map-zoom zoom-in" id="zoom-in" type="button" aria-label="Zoomer">+</button><button class="map-zoom zoom-out" id="zoom-out" type="button" aria-label="Dézoomer">−</button>
+
+    <section class="journey-console" aria-label="Commandes du voyage">
+      <div class="console-main">
+        <button class="journey-toggle" id="journey-toggle" type="button" aria-label="Lancer le voyage"><span class="toggle-icon">▶</span></button>
+        <div class="console-progress"><div class="console-meta"><span id="journey-caption">La source de la Marne</span><span id="journey-percent">0 %</span></div><input id="journey-range" type="range" min="0" max="1000" value="0" step="1" aria-label="Position du bateau sur la Marne"><div class="journey-endpoints"><span>La source</span><span id="destination-label">Limite du Grand Est</span></div></div>
+        <button class="restart-button" id="restart" type="button" aria-label="Recommencer depuis la source" title="Recommencer">↺</button>
+      </div>
+      <div class="console-bottom"><span class="season-mark" id="season-mark">HIVER</span><span class="date-track"><span class="month-name" id="month-name">Janvier</span><span id="year-name">2024</span></span><label class="year-choice">DÉPART <select id="year-select" aria-label="Année de départ"></select></label><span class="console-hint" id="console-hint">Le voyage avance, le calendrier aussi</span><button class="speed-button" id="speed-button" type="button" title="Changer la vitesse">×1</button></div>
+    </section>
+    <div class="data-credit">Hydrologie & météo : données du concours DataGrandEst · effets visuels proportionnels aux valeurs mensuelles</div>
   </main>
-  <footer class="footer"><span>DataGrandEst 2026 · les données du concours, mises en récit</span><a href="../../DONNEES/Me_Lire_1791105003994.pdf" target="_blank" rel="noopener">Document source ↗</a></footer>
-</div><script type="module" src="../../assets/marne.js"></script>
-</body></html>
+  <script type="module" src="../../assets/marne-journey.js"></script>
+</body>
+</html>

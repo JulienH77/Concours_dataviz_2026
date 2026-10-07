@@ -1,0 +1,89 @@
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+.marne-journey-page{--ink:#183a39;--muted:#67817a;--cream:#f7f3e7;--water:#438c8a;background:#dce9de;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.marne-stage{position:relative;width:100vw;height:100svh;min-height:470px;overflow:hidden;background:#dce9de;isolation:isolate}
+.living-map{position:absolute;inset:0;width:100%;height:100%;background:#dce9de;z-index:0}
+.map-ground{fill:#dce9de}
+.department-shape{fill:#d4e3d6;stroke:#b4ccbb;stroke-width:.42;stroke-linejoin:round;opacity:.7}
+.department-label{font:2.4px system-ui,sans-serif;font-weight:800;letter-spacing:.7px;fill:#99b09f;opacity:.64;text-anchor:middle}
+.map-ground~#world{pointer-events:none}
+.river-soft{fill:none;stroke:#a9c9b7;stroke-width:.34;stroke-linecap:round;stroke-linejoin:round;opacity:.44}
+.river-thread{fill:none;stroke:#80aea3;stroke-width:.13;stroke-linecap:round;stroke-linejoin:round;opacity:.36}
+.journey-river{fill:none;stroke:url(#river-water);stroke-width:.72;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1.5 1.15;animation:current 8s linear infinite;filter:drop-shadow(0 0 1.4px #d4efdd)}
+.station-ring{fill:#f7f3e7;stroke:#4d8984;stroke-width:.3;opacity:.85}.station-core{fill:#347e7c;stroke:#fff;stroke-width:.26}.station-label{font:1.2px system-ui,sans-serif;fill:#4e7069;paint-order:stroke;stroke:#e5eee1;stroke-width:.55px;stroke-linejoin:round;opacity:.85}
+.town-dot{fill:#f8f1d9;stroke:#476d5e;stroke-width:.42}.town-label{font:1.72px system-ui,sans-serif;font-weight:650;fill:#375b52;paint-order:stroke;stroke:#e0eadf;stroke-width:.68px;stroke-linejoin:round}
+.halt-ring{fill:none;stroke:#bb8257;stroke-width:.42;opacity:.65;animation:station-pulse 2.7s ease-out infinite}.halt-core{fill:#bd7951;stroke:#fff7e7;stroke-width:.45}
+.weather-cloud{fill:#668d96;opacity:.045;filter:url(#soft-weather);animation:cloud-breathe 7s ease-in-out infinite}
+.rain-drop{stroke:#317ca1;stroke-width:.12;stroke-linecap:round;opacity:.74;stroke-dasharray:.5 .26;animation:rain-fall .75s linear infinite;animation-delay:var(--lag)}
+.snow-fall{font:1.25px system-ui,sans-serif;fill:#fff;stroke:#6393a1;stroke-width:.12px;paint-order:stroke;opacity:.85;animation:snow-fall 4s linear infinite;animation-delay:var(--lag)}
+.soil-haze{fill:#b6c3a4;opacity:.26;filter:url(#soft-weather);animation:haze-drift 8s ease-in-out infinite}
+.map-tint{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(224,236,222,.75),transparent 22%,transparent 64%,rgba(222,235,221,.08) 75%,rgba(223,235,222,.72));}
+.journey-header{position:absolute;z-index:4;left:clamp(17px,3vw,44px);right:clamp(17px,3vw,44px);top:max(18px,env(safe-area-inset-top));display:grid;grid-template-columns:150px 1fr auto;align-items:center;gap:22px;pointer-events:none}
+.journey-brand,.other-idea{pointer-events:auto;text-decoration:none;color:var(--ink)}
+.journey-brand{display:flex;align-items:center;gap:9px;font-size:10px;font-weight:750;letter-spacing:.045em;line-height:1.15;text-transform:uppercase}
+.brand-mark{display:grid;place-items:center;width:34px;height:34px;border:1px solid #88aaa0;border-radius:50%;background:#edf2e3c9;color:#367e7b;font-family:Georgia,serif;font-size:27px;font-weight:500;line-height:1}
+.journey-title{justify-self:start;padding:7px 14px;border-left:1px solid #63877c88}
+.journey-title span{font-size:9px;text-transform:uppercase;letter-spacing:.17em;color:#5b7b72;font-weight:800}
+.journey-title h1{margin:1px 0 0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(24px,3vw,40px);font-weight:500;letter-spacing:-.055em;line-height:1.06;color:#173c3a}
+.journey-title h1 i{font-weight:400;color:#4e8980}
+.header-right{display:grid;justify-items:end;gap:9px}
+.live-pill{display:flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid #c3d4c4;border-radius:999px;background:#edf2e7c9;color:#47716a;font-size:8px;font-weight:800;letter-spacing:.1em;backdrop-filter:blur(8px)}
+.live-pill i,.weather-pulse{display:inline-block;width:6px;height:6px;border-radius:50%;background:#5b9b78;box-shadow:0 0 0 3px #5b9b7825;animation:live-pulse 2s ease-out infinite}
+.other-idea{font-size:9px;color:#557970;font-weight:750}
+.map-status{position:absolute;top:125px;left:clamp(18px,3.3vw,48px);z-index:3;display:flex;gap:8px;align-items:center;color:#52766e;font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.status-separator{color:#b8a377}
+.north-mark{position:absolute;right:clamp(19px,3vw,42px);top:150px;z-index:3;display:grid;justify-items:center;color:#638078;font-size:8px;font-weight:850;letter-spacing:.13em}
+.north-mark span{font-size:18px;font-weight:400;line-height:1.2}
+.traveller{position:absolute;z-index:3;left:50%;top:52%;width:64px;height:92px;transform-origin:center;filter:url(#boat-shadow);transition:transform .08s linear;pointer-events:none}
+.traveller svg{width:100%;height:100%;overflow:visible;animation:boat-rock 3.2s ease-in-out infinite}
+.town-card{position:absolute;z-index:5;left:50%;top:calc(52% - 113px);transform:translate(-50%,-100%);width:min(330px,calc(100vw - 32px));padding:16px 19px 17px;border:1px solid #d8dfcc;border-radius:4px 16px 16px 16px;background:rgba(250,248,237,.94);box-shadow:0 10px 30px #264d3d19;backdrop-filter:blur(12px);animation:card-enter .45s cubic-bezier(.2,.8,.2,1) both}
+.town-card:after{content:"";position:absolute;left:50%;bottom:-12px;width:1px;height:12px;background:#9ba88d}
+.town-card[hidden]{display:none}
+.town-card-kicker{display:flex;align-items:center;gap:9px;color:#658077;font-size:7px;letter-spacing:.13em;font-weight:850}
+.town-card-kicker>span:last-child{white-space:nowrap}
+.town-card-line{height:1px;flex:1;background:#d1dbce}
+.town-card h2{margin:8px 0 4px;font-family:Georgia,serif;font-size:27px;line-height:1;color:#234946;font-weight:500;letter-spacing:-.035em}
+.town-card p{margin:0;color:#637b72;font-family:Georgia,serif;font-size:12px;line-height:1.42}
+.weather-readout{position:absolute;z-index:4;right:clamp(17px,3vw,45px);top:50%;transform:translateY(-35%);width:216px;padding:15px 16px 13px;border:1px solid #cbd9ca;border-radius:4px 16px 16px 16px;background:rgba(241,245,232,.84);box-shadow:0 7px 26px #33534514;backdrop-filter:blur(10px)}
+.weather-readout-top{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#50736b;font-size:8px;font-weight:850;letter-spacing:.1em;text-transform:uppercase}
+.weather-summary{min-height:35px;padding:8px 0 9px;color:#315c56;font-family:Georgia,serif;font-size:14px;line-height:1.28}
+.weather-values{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.weather-values>div{padding:7px 8px 6px;border-left:1px solid #9db6a2;background:#e8eee1a6}
+.weather-values span{display:block;color:#789087;font-size:7px;font-weight:850;letter-spacing:.11em}
+.weather-values strong{display:block;margin-top:2px;color:#2f625d;font-family:Georgia,serif;font-size:14px;font-weight:500;white-space:nowrap}
+.weather-foot{display:block;margin-top:9px;color:#82938a;font-size:7px;line-height:1.35}
+.weather-legend{position:absolute;z-index:3;right:clamp(20px,3.2vw,45px);bottom:160px;display:flex;gap:13px;color:#627d72;font-size:8px;font-weight:700;letter-spacing:.02em}
+.weather-legend span{display:flex;align-items:center;gap:5px}.weather-legend i{font-style:normal;font-size:12px}.legend-rain{color:#387da0}.legend-snow{color:#f9ffff;text-shadow:0 1px 3px #64858d}.legend-mist{width:13px;height:7px;border-radius:50%;background:#9cae92;filter:blur(1px);opacity:.7}
+.map-zoom{position:absolute;z-index:3;left:clamp(18px,3vw,43px);width:31px;height:31px;border:1px solid #b8cbb9;border-radius:50%;background:#edf2e7ce;color:#426d64;font-size:18px;line-height:1;cursor:pointer;backdrop-filter:blur(7px);transition:background .2s,transform .2s}
+.map-zoom:hover{background:#fff9e9;transform:scale(1.05)}.zoom-in{bottom:163px}.zoom-out{bottom:124px}
+.journey-console{position:absolute;z-index:5;left:clamp(15px,3vw,42px);right:clamp(15px,3vw,42px);bottom:max(23px,env(safe-area-inset-bottom));padding:15px 19px 11px;border:1px solid #d0ddcc;border-radius:18px 4px 18px 18px;background:rgba(246,247,234,.91);box-shadow:0 14px 45px #2f55401c;backdrop-filter:blur(15px)}
+.console-main{display:grid;grid-template-columns:46px minmax(0,1fr) 32px;align-items:center;gap:13px}
+.journey-toggle{display:grid;place-items:center;width:43px;height:43px;border:0;border-radius:50%;background:#316e68;color:#f5f2e5;cursor:pointer;box-shadow:0 5px 13px #316e682b;transition:background .2s,transform .2s}
+.journey-toggle:hover{background:#245b58;transform:scale(1.04)}.journey-toggle .toggle-icon{font-size:15px;font-weight:850}.journey-toggle.is-playing .toggle-icon{font-size:12px;letter-spacing:1px}
+.console-progress{min-width:0}.console-meta{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px;color:#3e6b64;font-size:9px;font-weight:800}.console-meta span:last-child{color:#799087;font-variant-numeric:tabular-nums}
+.console-progress input{display:block;width:100%;height:13px;margin:0;accent-color:#498a80;cursor:ew-resize}
+.journey-endpoints{display:flex;justify-content:space-between;color:#8a9a8e;font-size:7px;font-weight:750;letter-spacing:.04em;text-transform:uppercase}
+.restart-button{width:30px;height:30px;border:1px solid #c8d6c6;border-radius:50%;background:transparent;color:#658279;font-size:20px;cursor:pointer;transition:transform .35s,background .2s}.restart-button:hover{transform:rotate(-45deg);background:#e8eee2}
+.console-bottom{display:flex;align-items:center;gap:11px;padding:9px 3px 0 57px}.season-mark{color:#779086;font-size:7px;font-weight:900;letter-spacing:.15em}.date-track{display:flex;align-items:baseline;gap:5px;color:#426d64}.month-name{font-family:Georgia,serif;font-size:17px;line-height:1}.date-track>span:last-child{color:#82958b;font-size:9px}.year-choice{display:flex;align-items:center;gap:5px;margin-left:5px;color:#8a9a8e;font-size:6px;font-weight:850;letter-spacing:.1em}.year-choice select{padding:3px 5px;border:1px solid #d0dccd;border-radius:6px;background:#edf1e7;color:#55766c;font-size:8px;font-weight:750}.console-hint{margin-left:auto;color:#809288;font-size:8px}.speed-button{min-width:36px;padding:4px 6px;border:1px solid #c7d7c5;border-radius:999px;background:#e9efe2;color:#5b7b71;font-size:8px;font-weight:850;cursor:pointer}
+.data-credit{position:absolute;z-index:2;right:clamp(20px,3vw,44px);bottom:11px;color:#668076;font-size:7px;letter-spacing:.025em;text-shadow:0 1px 3px #e3ecdf}
+@keyframes current{to{stroke-dashoffset:-21}}
+@keyframes station-pulse{0%{r:5.2;opacity:.75}90%,100%{r:12;opacity:0}}
+@keyframes live-pulse{0%{box-shadow:0 0 0 0 #5b9b7845}75%,100%{box-shadow:0 0 0 5px #5b9b7800}}
+@keyframes cloud-breathe{50%{opacity:.14;transform:scale(1.12)}}
+@keyframes rain-fall{to{transform:translate(-1px,6px);opacity:.18}}
+@keyframes snow-fall{0%{transform:translateY(-3px);opacity:.2}30%{opacity:.92}100%{transform:translate(2px,8px);opacity:.18}}
+@keyframes haze-drift{50%{transform:translateX(2px) scaleX(1.15);opacity:.36}}
+@keyframes boat-rock{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-2px) rotate(1deg)}}
+@keyframes card-enter{from{opacity:0;transform:translate(-50%,-90%)}to{opacity:1;transform:translate(-50%,-100%)}}
+@media(max-width:900px){.journey-header{grid-template-columns:110px 1fr auto;gap:10px}.journey-title{padding-right:0}.journey-title h1{font-size:29px}.weather-readout{right:18px;width:185px}.header-right{gap:6px}.other-idea{font-size:8px}.map-status{top:107px}.north-mark{top:125px}}
+@media(max-width:620px){
+  .marne-stage{min-height:560px}.journey-header{left:14px;right:14px;top:max(13px,env(safe-area-inset-top));grid-template-columns:38px 1fr auto;gap:9px;align-items:start}
+  .journey-brand{width:34px;height:34px;overflow:hidden;gap:0}.journey-brand>span:last-child{display:none}.brand-mark{flex:0 0 34px;width:34px;height:34px}
+  .journey-title{padding:2px 0 2px 9px}.journey-title span{font-size:7px;letter-spacing:.11em}.journey-title h1{font-size:24px;white-space:nowrap}.header-right{padding-top:1px}.live-pill{gap:5px;padding:7px 8px;font-size:6px;letter-spacing:.055em;white-space:nowrap}.live-pill i{width:5px;height:5px}.other-idea{font-size:7px;white-space:nowrap}
+  .map-status{left:17px;top:71px;font-size:7px}.north-mark{right:19px;top:89px;font-size:7px}.north-mark span{font-size:14px}
+  .traveller{top:48%;width:51px;height:76px}.town-card{top:calc(48% - 88px);padding:13px 15px 14px}.town-card h2{font-size:23px}.town-card p{font-size:11px}
+  .weather-readout{top:auto;right:14px;bottom:158px;transform:none;width:min(208px,55vw);padding:11px 12px 10px;border-radius:4px 13px 13px 13px}.weather-summary{min-height:29px;font-size:12px;padding:6px 0}.weather-values{gap:4px}.weather-values>div{padding:5px 6px}.weather-values strong{font-size:12px}.weather-foot{margin-top:6px;font-size:6px}
+  .weather-legend{left:17px;right:auto;bottom:161px;display:grid;gap:5px;font-size:7px}.weather-legend span{gap:4px}.weather-legend i{font-size:10px}.zoom-in{left:14px;bottom:250px}.zoom-out{left:14px;bottom:212px}.map-zoom{width:28px;height:28px}
+  .journey-console{left:10px;right:10px;bottom:max(17px,env(safe-area-inset-bottom));padding:11px 12px 9px;border-radius:15px 4px 15px 15px}.console-main{grid-template-columns:39px minmax(0,1fr) 27px;gap:8px}.journey-toggle{width:37px;height:37px}.restart-button{width:26px;height:26px;font-size:18px}.console-meta{font-size:8px}.journey-endpoints{font-size:6px}.console-bottom{padding:7px 0 0 47px;gap:8px}.season-mark{font-size:6px}.month-name{font-size:15px}.date-track>span:last-child{font-size:8px}.console-hint{display:none}.speed-button{margin-left:auto}.data-credit{left:13px;right:auto;bottom:5px;font-size:6px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}

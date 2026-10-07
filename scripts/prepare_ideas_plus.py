@@ -180,6 +180,44 @@ for left, right in zip(anchors, anchors[1:]):
     part = simplify(journey[left:right + 1], tol=0.0002)
     journey_simplified.extend(part if not journey_simplified else part[1:])
 
+# The station series used above ends in Châlons. Continue the actual Marne
+# geometry to its western edge in the supplied Grand Est river layer. The
+# source layers contain a small gap at the station coordinate, so retain a
+# short connector to the nearest downstream geometry endpoint.
+route_end = journey[-1]
+continuations = []
+for line in river_lines:
+    for reverse in (False, True):
+        ordered = list(reversed(line)) if reverse else line
+        near = ordered[0]
+        gap = math.hypot((near[0] - route_end[0]) * math.cos(math.radians(48)), near[1] - route_end[1])
+        if near[0] < route_end[0] and gap < 0.2 and ordered[-1][0] < near[0]:
+            continuations.append((gap, ordered))
+continuations.sort(key=lambda item: (item[1][-1][0] > 3.8, item[0]))
+if continuations:
+    extension = continuations[0][1]
+    # Densify the data-layer gap so the boat crosses it smoothly.
+    gap_end = extension[0]
+    gap_km = math.hypot((gap_end[0] - route_end[0]) * 111 * math.cos(math.radians(48)), (gap_end[1] - route_end[1]) * 111)
+    gap_steps = max(1, math.ceil(gap_km / 1.2))
+    connector = [[route_end[0] + (gap_end[0] - route_end[0]) * i / gap_steps,
+                  route_end[1] + (gap_end[1] - route_end[1]) * i / gap_steps]
+                 for i in range(1, gap_steps + 1)]
+    journey_simplified.extend(connector)
+    journey_simplified.extend(extension[1:])
+    journey.extend(connector)
+    journey.extend(extension[1:])
+
+# Recalculate station stops on the extended route so the last station remains
+# before the river's regional exit rather than becoming the trip's endpoint.
+cumdist = [0.0]
+for a, b in zip(journey, journey[1:]):
+    cumdist.append(cumdist[-1] + math.hypot((b[0] - a[0]) * math.cos(math.radians(48)), b[1] - a[1]))
+journey_progress = []
+for target in story_nodes:
+    i = min(range(len(journey)), key=lambda j: (journey[j][0] - target[0]) ** 2 + (journey[j][1] - target[1]) ** 2)
+    journey_progress.append(round(100 * cumdist[i] / cumdist[-1], 2) if cumdist[-1] else 0)
+
 out = {
     "version": 1,
     "source": "DONNEES/donnees/donnees.csv et cours-eau-region_1791104972648.geojson",
@@ -192,6 +230,7 @@ out = {
     "journeyIds": story_ids,
     "journeyProgress": journey_progress,
     "journeyGeometry": [[round(p[0], 6), round(p[1], 6)] for p in journey_simplified],
+    "exitPoint": [round(journey[-1][0], 6), round(journey[-1][1], 6)],
     "stations": {sid: station_record(sid) for sid in sorted(SELECTED)},
     "marneGeometry": river_lines,
     "geometryNote": "Cours d'eau nommés exactement « la Marne » dans la donnée fournie, simplifiés pour affichage.",
