@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#edf2e9">
+  <meta name="description" content="Suivez la Marne de sa source au fil des stations hydrométriques et météorologiques du Grand Est.">
+  <title>La Marne au fil de l’eau · DataGrandEst 2026</title>
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/style.css"><link rel="stylesheet" href="../../assets/ideas-plus.css">
+</head>
+<body class="marne-page">
+<div class="shell">
+  <header class="topbar"><a class="brand" href="../../index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C12 11 5 16 5 22a11 11 0 0 0 22 0C27 16 20 11 16 3Z" fill="#137d85"/><path d="M7 22c4-6 10 6 18 0" stroke="#fffefa" stroke-width="2" fill="none"/></svg> Les rythmes de l’eau</a><div class="toplinks"><a href="../07-pouls-villes/">Les battements du Grand Est ↗</a><a href="../../METHODOLOGIE.md">Méthodologie</a></div></header>
+  <main class="plus-shell">
+    <div class="plus-kicker">Piste 06 · une traversée racontée par les données</div>
+    <div class="marne-heading"><div><h1>La Marne,<br><em>au fil de l’eau.</em></h1><p class="plus-lede">De la source au nord de la Haute-Marne, une feuille dérive entre les stations. À chaque halte, la rivière rencontre la météo de ce mois-là.</p></div><div class="year-box"><label for="year">Année observée</label><select id="year"></select><small>Les mesures fournies sont hebdomadaires, regroupées ici par mois.</small></div></div>
+    <section class="river-layout">
+      <div class="river-map panel-plus">
+        <div class="plus-panel-head"><div><span class="eyebrow">La source et son bassin</span><h2>Un voyage vers l’aval</h2></div><button class="map-reset" id="map-reset" type="button" aria-label="Recentrer la carte">Recentrer</button></div>
+        <div class="map-frame"><svg id="river-map" viewBox="0 0 700 700" role="img" aria-label="Carte de la Marne et des stations de mesure"><defs><linearGradient id="water" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#a8c5a8"/><stop offset="1" stop-color="#dce8d7"/></linearGradient><filter id="soft"><feGaussianBlur stdDeviation="3"/></filter></defs><rect width="700" height="700" fill="#edf2e9"/><g id="departments"></g><g id="river-lines"></g><path id="journey-line" class="journey-line"/><g id="weather"></g><g id="stops"></g><g id="traveller" aria-hidden="true"></g><g id="map-labels"></g></svg></div>
+        <div class="map-legend"><span><i class="legend-dot source-dot"></i>Source</span><span><i class="legend-dot station-dot"></i>Station suivie</span><span><i class="legend-dot no-data-dot"></i>Station sans débit exploitable</span></div>
+      </div>
+      <aside class="river-info">
+        <div class="stop-card panel-plus"><div class="stop-top"><span class="eyebrow" id="stop-kind">Point de départ</span><span class="month-pill" id="month-label">FÉVRIER</span></div><h2 id="stop-title">La source de la Marne</h2><p id="stop-note" class="stop-note"></p><div id="station-warning" class="station-warning"></div>
+          <div class="big-flow"><strong id="flow-value">—</strong><span id="flow-label">Débit médian mensuel · unité de source</span></div><div class="small-flow-note">Le débit est ramené à sa médiane historique pour l’animation et la comparaison. Le chiffre brut reste consultable.</div>
+        </div>
+        <div class="weather-card panel-plus"><div class="plus-panel-head"><div><span class="eyebrow">Ce mois autour de la station</span><h2>Le temps sur les rives</h2></div></div><div class="weather-grid">
+          <div class="weather-metric"><span class="metric-icon temp-icon">°</span><div><strong id="temp">—</strong><span>température moyenne</span></div></div>
+          <div class="weather-metric"><span class="metric-icon rain-icon">↘</span><div><strong id="rain">—</strong><span>pluie cumulée</span></div></div>
+          <div class="weather-metric"><span class="metric-icon snow-icon">✳</span><div><strong id="snow">—</strong><span>neige cumulée</span></div></div>
+          <div class="weather-metric"><span class="metric-icon soil-icon">≈</span><div><strong id="soil">—</strong><span>humidité du sol</span></div></div>
+        </div><p class="weather-caption" id="weather-caption">Les effets animés illustrent les valeurs mensuelles fournies.</p></div>
+        <div class="river-chart panel-plus"><div class="plus-panel-head"><div><span class="eyebrow">La série mensuelle</span><h2>Le débit suit son cours</h2></div></div><svg id="month-chart" viewBox="0 0 500 120" role="img" aria-label="Débit mensuel relatif à la médiane de la station"></svg><div class="chart-legend"><span><i class="chart-line"></i>Rapport à la médiane de la station</span><span>1 = médiane</span></div></div>
+      </aside>
+    </section>
+    <section class="journey-controls panel-plus"><div class="journey-control-top"><div><span class="eyebrow">Faire dériver la feuille</span><h2>Du plateau de Langres à la Champagne</h2></div><button id="play" class="play-button" type="button"><span>▶</span> Faire le voyage</button></div><div class="range-wrap"><input id="progress" type="range" min="0" max="1000" value="0" aria-label="Progression le long de la Marne"><div class="range-ends"><span>Source · Balesmes-sur-Marne</span><span>En aval</span></div><div id="stop-markers" class="stop-markers" aria-hidden="true"></div></div><div class="journey-foot"><span id="journey-status">En attente au départ</span><span>Fais glisser le curseur ou lance le voyage</span></div></section>
+    <details class="method-plus"><summary>Stations, calculs et limites</summary><div><p>La Marne prend sa source à Balesmes-sur-Marne, près de Langres. Langres est un repère géographique proche : la rivière ne traverse pas la ville et le jeu de données ne fournit pas de station à Langres. La première station avec un débit exploitable sur ce tronçon est Marnay-sur-Marne. Au niveau de Chaumont, la page utilise la station de Condes (série disponible) ; la station Chaumont-Reclancourt est très lacunaire. Les arrêts de Joinville et de la Chaussée-sur-Marne restent affichés mais leurs débits manquent dans le fichier.</p><p>Chaque valeur mensuelle résume les semaines disponibles de l’année choisie, rattachées au mois de leur date de début (lundi) : médiane pour le débit, température et humidité moyennes, somme des cumuls hebdomadaires pour pluie et neige. Une absence n’est jamais remplacée par zéro. Les chiffres de débit brut sont consultables, mais le graphe privilégie leur rapport à la médiane historique de la station, car l’échelle brute du fichier est signalée comme à vérifier dans la méthodologie du dépôt.</p><p>La géométrie provient du fichier des cours d’eau fourni au concours et est simplifiée pour l’affichage. Les effets de pluie (cumul mensuel supérieur à 10 mm), de neige (cumul supérieur à 0) et de brume de sol (humidité moyenne supérieure à 20 mm) sont une mise en scène des valeurs du mois observé : ils ne constituent ni une prévision météo ni une mesure visuelle de l’intensité réelle.</p></div></details>
+  </main>
+  <footer class="footer"><span>DataGrandEst 2026 · les données du concours, mises en récit</span><a href="../../DONNEES/Me_Lire_1791105003994.pdf" target="_blank" rel="noopener">Document source ↗</a></footer>
+</div><script type="module" src="../../assets/marne.js"></script>
+</body></html>

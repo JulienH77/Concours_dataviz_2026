@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f3ec">
+  <meta name="description" content="Affiche hydrologique : 26 années de débit relatif dans huit villes et pôles urbains du Grand Est.">
+  <title>Les battements du Grand Est · DataGrandEst 2026</title>
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../../assets/style.css"><link rel="stylesheet" href="../../assets/ideas-plus.css">
+</head>
+<body class="pulse-page">
+<div class="shell">
+  <header class="topbar"><a class="brand" href="../../index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C12 11 5 16 5 22a11 11 0 0 0 22 0C27 16 20 11 16 3Z" fill="#137d85"/><path d="M7 22c4-6 10 6 18 0" stroke="#fffefa" stroke-width="2" fill="none"/></svg> Les rythmes de l’eau</a><div class="toplinks"><a href="../06-marne/">La Marne au fil de l’eau ↗</a><a href="../../METHODOLOGIE.md">Méthodologie</a></div></header>
+  <main class="plus-shell pulse-shell">
+    <div class="pulse-headline"><div><div class="plus-kicker">Piste 07 · composition statique · 2000—2025</div><h1>Les battements<br><em>du Grand Est.</em></h1><p class="plus-lede">Vingt-six ans de pulsations fluviales, au rythme des villes et des stations qui les mesurent.</p></div><div class="pulse-actions"><button id="download-svg" class="outline-button" type="button">Télécharger l’affiche SVG</button><button id="print" class="play-button" type="button">Imprimer l’affiche</button></div></div>
+    <div id="poster" class="poster panel-plus">
+      <div class="poster-top"><div><span class="eyebrow">DataGrandEst · 2000—2025</span><h2>Quand les rivières<br>prennent le pouls.</h2><p>Débit annuel rapporté à la médiane historique de chaque station</p></div><div class="poster-map"><svg id="city-map" viewBox="0 0 360 300" role="img" aria-label="Localisation des stations qui composent l’affiche"><rect width="360" height="300" rx="16" fill="#edf2e9"/><g id="region-shape"></g><g id="city-points"></g></svg><small>Huit stations · des bassins différents</small></div></div>
+      <div id="pulse-cards" class="pulse-cards"></div>
+      <div class="poster-bottom"><div><strong>1×</strong> = débit médian propre à la station <span>Les niveaux des cours d’eau ne sont pas additionnés.</span></div><div class="poster-legend"><span><i></i>Débit relatif médian</span><span class="ref-key"><i></i>Référence 1×</span></div></div>
+      <div class="poster-source">Source : données DataGrandEst 2026 · débits moyens hebdomadaires, regroupés par année · 2026 écartée car incomplète</div>
+    </div>
+    <div class="pulse-bottom-notes"><div class="panel-plus note-plus"><h2>Une pulsation comparable</h2><p>Chaque année représente la médiane des médianes mensuelles de débit. Elle est divisée par la médiane de toute la série disponible pour cette station. Une ligne qui monte au-dessus de 1× indique donc une année plus élevée que son niveau habituel local ; elle ne signifie pas que la ville a plus d’eau qu’une autre.</p></div><div class="panel-plus note-plus"><h2>Pourquoi ces huit stations ?</h2><p>Ce sont des points de mesure associés à plusieurs pôles urbains ou à leurs rivières proches, avec une série de débit suffisamment exploitable dans les données du concours. Les noms affichés sont ceux des stations réelles. Reims et Metz n’ont pas de série de débit exploitable dans le fichier transmis ; je ne leur invente donc pas de battement.</p></div></div>
+    <details class="method-plus"><summary>Définition des séries et précautions de lecture</summary><div><p>Pour chaque station, la médiane annuelle est calculée à partir des médianes mensuelles disponibles ; elle est rapportée à la médiane de tous les débits valides de la station, sur la période fournie. Les débits bruts ne sont pas comparés entre stations : l’échelle indiquée dans le PDF du concours est signalée comme suspecte dans l’analyse du dépôt. Les années sans mesure suffisante apparaissent comme des interruptions, et non comme des valeurs nulles.</p><p>Stations affichées : Strasbourg (Ill), Mulhouse (Ill), Colmar (Ill), Épinal (Moselle), Nancy (Meurthe, station de Laneuveville-devant-Nancy), Chaumont (Marne à Condes), Saint-Dizier (Marne), Châlons-en-Champagne (Marne). La carte localise les stations ; elle ne décrit pas les limites d’influence urbaine.</p></div></details>
+  </main>
+  <footer class="footer"><span>DataGrandEst 2026 · une affiche exploratoire</span><a href="../../DONNEES/Me_Lire_1791105003994.pdf" target="_blank" rel="noopener">Document source ↗</a></footer>
+</div><script type="module" src="../../assets/pouls-villes.js"></script>
+</body></html>
