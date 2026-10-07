@@ -144,7 +144,6 @@ function render() {
   $('journey-range').value=Math.round(progress*10);$('journey-percent').textContent=`${Math.round(progress)} %`;
   $('place-label').textContent=progress<1?'La source · Balesmes-sur-Marne':progress>99?'La Marne quitte le Grand Est':`La Marne · ${Math.round(routeLength*progress/100)} km`;
   $('distance-label').textContent=`${Math.round(routeLength*progress/100)} km parcourus`;
-  const nearest=nearestStation(progress);$('console-caption')?.remove();
   $('journey-caption').textContent=holdingUntil>performance.now()&&activeStop>=0?`Halte à ${stops[activeStop].city}`:progress>=99.9?'La Marne quitte le Grand Est':'Le bateau suit le courant';
   $('console-hint').textContent=playing&&holdingUntil>performance.now()?'La rivière continue de vivre pendant la halte':playing?'Le voyage avance, le calendrier aussi':'Choisissez un point ou lancez la dérive';
   $('journey-toggle').classList.toggle('is-playing',playing);$('journey-toggle').setAttribute('aria-label',playing?'Mettre le voyage en pause':'Lancer le voyage');$('journey-toggle').querySelector('.toggle-icon').textContent=playing?'Ⅱ':'▶';
