@@ -1,6 +1,6 @@
 # Concours DataGrandEst 2026 — Les rythmes de l’eau
 
-Cinq prototypes initiaux, complétés par deux pistes de récit et d’affiche, construits avec **les fichiers fournis pour le concours**. Elles restent séparées pour comparer les propositions sans perdre les premières idées.
+Cinq prototypes initiaux, complétés par trois pistes de récit, d’affiche et de jeu, construits avec **les fichiers fournis pour le concours**. Elles restent séparées pour comparer les propositions sans perdre les premières idées.
 
 | Piste | Page | Interaction principale |
 |---|---|---|
@@ -10,13 +10,14 @@ Cinq prototypes initiaux, complétés par deux pistes de récit et d’affiche, 
 | L’ADN hydrologique | `idees/04-adn/` | Profils saisonniers et comparaison de quatre stations |
 | Deux visages de l’eau | `idees/05-deux-visages/` | Symboles annuels partagés : bas / haut et usages de surveillance |
 | La Marne, au fil de l’eau | `idees/06-marne/` | Parcours animé de la source aux stations, avec les valeurs mensuelles de débit et de météo |
-| Les battements du Grand Est | `idees/07-pouls-villes/` | Affiche exportable : débits relatifs annuels de huit stations, de 2000 à 2025 |
+| Les battements du Grand Est | `idees/07-pouls-villes/` | Affiche exportable : débits relatifs annuels de huit stations, de 2000 à 2025 | 
+| Les dés de l’eau | `idees/08-jeu-de-loie/` | Jeu de dés sur 312 mois, avec événements météo et stations du Grand Est |
 
 Les cinq prototypes initiaux proposent une recherche par rivière, commune ou code, des filtres bassin/département, une fiche station, les sources et limites. Exports : cartes SVG, données station CSV, calendrier PNG, empreintes SVG. L’interface s’adapte au mobile et à l’impression. Aucun serveur métier, compte, clé API ou bibliothèque JS distante.
 
 ## Mise en ligne sur GitHub Pages
 
-Dans le dépôt : **Settings → Pages → Deploy from a branch → main → / (root) → Save**. L’accueil sera à l’adresse `https://julienh77.github.io/Concours_dataviz_2026/` une fois Pages activé et le déploiement terminé. Les sept propositions sont accessibles depuis cet accueil.
+Dans le dépôt : **Settings → Pages → Deploy from a branch → main → / (root) → Save**. L’accueil sera à l’adresse `https://julienh77.github.io/Concours_dataviz_2026/` une fois Pages activé et le déploiement terminé. Les huit propositions sont accessibles depuis cet accueil.
 
 Le dossier `.nojekyll` est en réalité un fichier vide à la racine et doit être conservé. Les pages sont prêtes à publier ; **aucune compilation, installation Node ou exécution Python n’est nécessaire pour les visiteurs**.
 
@@ -24,8 +25,8 @@ Le dossier `.nojekyll` est en réalité un fichier vide à la racine et doit êt
 
 ```text
 index.html                   Accueil comparatif
-idees/                       Les sept pages de proposition
-assets/                      JS / CSS des prototypes initiaux et des deux nouvelles pages
+idees/                       Les huit pages de proposition
+assets/                      JS / CSS des prototypes initiaux et des pistes complémentaires
 data/                        Cartes allégées, séries préparées et calculs pré-générés
 DONNEES/                     CSV, XLSX, PDF et GeoJSON originaux
 scripts/prepare.py           Pipeline statistique reproductible
