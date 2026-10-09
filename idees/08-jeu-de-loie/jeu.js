@@ -2,6 +2,26 @@ const DATA_URL='../../data/jeu-eau.json';
 const REGION_URL='../../data/region.geojson';
 const MONTHS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 const DICE=[{pips:[5]},{pips:[1,9]},{pips:[1,5,9]},{pips:[1,3,7,9]},{pips:[1,3,5,7,9]},{pips:[1,3,4,6,7,9]}];
+const CHAPTERS=[
+ {start:0,end:1,name:'ACTE I · LES EAUX DE L’EST'},
+ {start:2,end:9,name:'ACTE II · LE FIL DE LA MARNE'},
+ {start:10,end:12,name:'ACTE III · L’ILL VERS LE RHIN'}
+];
+const PLACE_STORIES=[
+ 'Dans les Vosges, la Moselle ouvre le carnet. La première mesure donne le ton du mois : pluie, neige, froid ou douceur.',
+ 'Le circuit gagne la Meurthe, dans le bassin de la Moselle. Les eaux quittent les reliefs et approchent de Nancy.',
+ 'Le voyage rejoint la Marne à Marnay-sur-Marne. C’est le début de notre longue série d’étapes sur ce cours d’eau.',
+ 'À Condes, le carnet prend une nouvelle mesure de la Marne. On compare ce mois à ceux observés ici, à la même saison.',
+ 'Mussey-sur-Marne devient la prochaine page du fleuve : les dés avancent le temps, la station raconte son état.',
+ 'À Joinville, le pion s’arrête au bord de la Marne. Une mesure absente reste une case blanche, jamais un zéro inventé.',
+ 'Le parcours continue à Chamouilley. La météo et le débit sont lus à cette station, sans les confondre avec ceux d’une autre.',
+ 'À Saint-Dizier, la Marne traverse le carnet comme un fil rouge. Le trait du graphique remet le mois dans les 26 années.',
+ 'La Chaussée-sur-Marne marque une autre étape du cours d’eau. Les pluies du mois sont comparées à son propre passé saisonnier.',
+ 'Dernière étape du chapitre Marne : Châlons-en-Champagne. Le voyage s’apprête à changer de bassin.',
+ 'Le carnet repart vers le sud de l’Alsace. À Mulhouse, l’Ill ouvre le chapitre rhénan et son nouveau rythme de station.',
+ 'À Colmar, l’Ill fournit une autre mesure. Les valeurs restent celles du site : elles ne sont pas mélangées aux stations de la Marne.',
+ 'Dernière étape du circuit : Strasbourg. L’Ill rejoint le Rhin ici, et le voyage régional peut recommencer.'
+];
 const EVENTS={
  crue:{title:'Pluie remarquable',icon:'🌧',short:'PLUIE',className:'rain-event',effect:1,effectText:'+1 mois au prochain lancer',story:'La pluie dépasse le seuil du 85e percentile pour ce mois de l’année à cette station. L’eau pousse le pion : au prochain lancer, tu avanceras d’un mois supplémentaire.'},
  neige:{title:'Épisode neigeux',icon:'❄',short:'NEIGE',className:'snow-event',effect:-1,effectText:'−1 mois au prochain lancer',story:'Le cumul de neige dépasse le seuil saisonnier de cette station. Le froid ralentit la goutte : au prochain lancer, elle avancera d’un mois de moins.'},
@@ -34,15 +54,15 @@ function renderMap(){
  const p=mapPoints[position%stops.length];
  const token='<g class="water-token" transform="translate('+p.x.toFixed(1)+' '+p.y.toFixed(1)+')"><ellipse cx="0" cy="16" rx="24" ry="7" fill="#1e443b" opacity=".13"/><path class="token-hull" d="M-21 4Q0 13 21 4L13 16Q0 21-13 16Z"/><path class="token-sail" d="M-2 -23V2L-18 0Z"/><path class="token-sail token-sail-light" d="M2 -20V2L17 0Z"/><circle class="token-head" cx="0" cy="-27" r="5"/><path class="token-person" d="M-6 -20Q0 -25 6 -20L8 -8H-8Z"/></g>';
  const v=stops[position%stops.length].monthly[position];
- $('map').innerHTML='<defs><clipPath id="region-clip">'+clip+'</clipPath><linearGradient id="river-gradient"><stop stop-color="#5aa9ae"/><stop offset="1" stop-color="#4b8e97"/></linearGradient></defs><g class="landscape">'+relief+boundary+'<g clip-path="url(#region-clip)">'+forest+'</g><path class="game-route" d="'+links+'"/><path class="marne-river" d="'+marne+'"/></g><g class="basin-label"><text x="180" y="430">MOSELLE</text><text x="530" y="245">LA MARNE</text><text x="790" y="200">ILL</text></g>'+markers+token+weatherSvg(p,v);
- const s=stops[position%stops.length];$('map-location').innerHTML='<span>ÉTAPE '+String(position%13+1).padStart(2,'0')+' · '+s.river.toUpperCase()+'</span><strong>'+s.town+'</strong>';
+ $('map').innerHTML='<defs><clipPath id="region-clip">'+clip+'</clipPath><linearGradient id="river-gradient"><stop stop-color="#5aa9ae"/><stop offset="1" stop-color="#4b8e97"/></linearGradient></defs><g class="landscape">'+relief+boundary+'<g clip-path="url(#region-clip)">'+forest+'</g><path class="game-route" d="'+links+'"/><path class="marne-river" d="'+marne+'"/></g><g class="basin-label"><text x="165" y="430">MOSELLE · MEURTHE</text><text x="530" y="245">LA MARNE</text><text x="790" y="200">L’ILL</text></g>'+markers+token+weatherSvg(p,v);
+ const s=stops[position%stops.length],label=$('map-location');label.innerHTML='<span>ÉTAPE '+String(position%13+1).padStart(2,'0')+' · '+s.river.toUpperCase()+'</span><strong>'+s.town+'</strong>';label.style.left=(p.x/10)+'%';label.style.top=(p.y/6)+'%';label.classList.toggle('flip',p.x>760);
 }
 function renderRibbon(){$('station-ribbon').innerHTML=data.stations.map((s,i)=>'<div class="ribbon-stop '+(i===position%13?'is-active':'')+'"><i>'+String(i+1).padStart(2,'0')+'</i><span>'+s.town+'</span></div>').join('');}
 function thresholdText(code,s,m){const l=s.limits[m],v=s.monthly[position];if(code==='crue')return'Pluie : '+fmt(v[1],0)+' mm · seuil saisonnier '+fmt(l[0],0)+' mm';if(code==='neige')return'Neige : '+fmt(v[2],1)+' · seuil saisonnier '+fmt(l[1],1);if(code==='etiage')return'Débit '+fmt(v[3],0)+' · humidité '+fmt(v[4],2)+' ; seuils : 15e percentile';if(code==='sol')return'Indice d’humidité '+fmt(v[4],2)+' · seuil saisonnier '+fmt(l[4],2);return'';}
-function updateStory(s,v,code){const m=position%12,y=2000+Math.floor(position/12),event=code&&EVENTS[code];$('story-tag').textContent=event?event.short+' · '+s.town.toUpperCase():'ÉTAPE '+String(position%13+1).padStart(2,'0')+' · '+s.river.toUpperCase();
+function updateStory(s,v,code){const m=position%12,y=2000+Math.floor(position/12),stage=position%13,event=code&&EVENTS[code],chapter=CHAPTERS.find(c=>stage>=c.start&&stage<=c.end);$('story-tag').textContent=(chapter?chapter.name:'ÉTAPE')+(event?' · '+event.short:'');
  if(position===0){$('story-text').textContent='Le voyage commence dans les Vosges, au bord de la Moselle. Les dés feront défiler les mois ; les observations de chaque station formeront le carnet de cette traversée du Grand Est.';}
- else if(event){$('story-text').textContent=event.story+' '+thresholdText(code,s,m)+'.';}
- else{let detail='Aucun des seuils choisis ne se déclenche ici.';if(Number.isFinite(v[3])&&Number.isFinite(v[1]))detail='Le mois apporte '+fmt(v[1],0)+' mm de pluie ; le débit mesuré est de '+fmt(v[3],0)+' dans la série source.';else if(!Number.isFinite(v[3])||!Number.isFinite(v[1]))detail='Une partie des mesures manque à cette station : le jeu la laisse visible plutôt que de la remplacer.';if(Number.isFinite(v[2])&&v[2]>0)detail+=' La série indique aussi '+fmt(v[2],1)+' de neige.';$('story-text').textContent='Nous voici à '+s.town+', sur '+s.river+'. '+MONTHS[m][0].toUpperCase()+MONTHS[m].slice(1)+' '+y+' devient une page du carnet : '+detail;}
+ else if(event){$('story-text').textContent=PLACE_STORIES[stage]+' '+event.story+' '+thresholdText(code,s,m)+'.';}
+ else{let detail='Aucun des seuils choisis ne se déclenche ici.';if(Number.isFinite(v[3])&&Number.isFinite(v[1]))detail='Le mois apporte '+fmt(v[1],0)+' mm de pluie ; le débit mesuré est de '+fmt(v[3],0)+' dans la série source.';else if(!Number.isFinite(v[3])||!Number.isFinite(v[1]))detail='Une partie des mesures manque à cette station : le jeu la laisse visible plutôt que de la remplacer.';if(Number.isFinite(v[2])&&v[2]>0)detail+=' La série indique aussi '+fmt(v[2],1)+' de neige.';$('story-text').textContent=PLACE_STORIES[stage]+' En '+MONTHS[m]+' '+y+', '+detail;}
 }
 function renderChart(s){const vals=s.monthly,flows=vals.map(v=>v[3]),rains=vals.map(v=>v[1]),good=flows.filter(Number.isFinite),wet=rains.filter(Number.isFinite),maxFlow=Math.max(1,...good),maxRain=Math.max(1,...wet),x=i=>16+i/311*928,fy=v=>22+(1-v/maxFlow)*70,ry=v=>159-Math.min(1,v/maxRain)*35;
  let line='',segment=[];flows.forEach((v,i)=>{if(Number.isFinite(v))segment.push((segment.length?'L':'M')+x(i).toFixed(1)+','+fy(v).toFixed(1));else if(segment.length){line+=segment.join(' ')+' ';segment=[];}});if(segment.length)line+=segment.join(' ');
@@ -58,12 +78,12 @@ function render(){const s=data.stations[position%13],v=s.monthly[position],code=
  $('temp').textContent=fmt(v[0],1,' °C');$('rain').textContent=fmt(v[1],0,' mm');$('snow').textContent=fmt(v[2],1);$('flow').textContent=fmt(v[3],0);$('soil').textContent=fmt(v[4],2);
  const banner=$('event-banner');banner.className='event-banner '+(event?event.className:'');$('event-title').textContent=event?event.title:'Eau calme';$('event-description').textContent=event?thresholdText(code,s,m):'Aucun seuil événementiel franchi pour cette case.';$('event-next').textContent=event?event.effectText:'';
  $('dice-instruction').textContent=position===311?'Arrivée ! Tu as traversé les 312 mois de janvier 2000 à décembre 2025.':event?event.effectText+'. Lance les dés quand tu es prêt.':'Lance deux dés : leur somme fait avancer le voyage de 2 à 12 mois.';
- $('turn-number').textContent=String(turn+1).padStart(2,'0');$('year-count').textContent='Cycle '+(Math.floor(position/13)+1)+' / 24';$('year-progress').style.width=(position/311*100)+'%';$('route-stop').textContent=String(position%13+1).padStart(2,'0');$('journal-total').textContent=turn?turn+' lancer'+(turn>1?'s':''):'Départ';$('roll-button').disabled=busy||position>=311;$('roll-label').textContent=position>=311?'Voyage terminé':'Lancer les dés';
+ $('turn-number').textContent=String(turn+1).padStart(2,'0');$('year-count').textContent='Cycle '+(Math.floor(position/13)+1)+' / 24';$('year-progress').style.width=(position/311*100)+'%';$('route-stop').textContent=String(position%13+1).padStart(2,'0');$('journal-total').textContent=turn?turn+' lancer'+(turn>1?'s':''):'Départ';$('roll-button').disabled=busy||position>=311;$('new-game').disabled=busy;$('roll-label').textContent=position>=311?'Voyage terminé':'Lancer les dés';
  updateStory(s,v,code);renderRibbon();renderMap();renderChart(s);
 }
 async function roll(){if(busy||position>=311)return;busy=true;const a=1+Math.floor(Math.random()*6),b=1+Math.floor(Math.random()*6),sum=a+b;setDie($('die-one'),a);setDie($('die-two'),b);$('dice-total').textContent=sum;render();await new Promise(r=>setTimeout(r,720));const before=position,effect=EVENTS[data.events[position]]?.effect||0,advance=Math.max(1,sum+effect);position=Math.min(311,position+advance);turn++;addJournal(before,position,sum,effect);busy=false;setDie($('die-one'),a);setDie($('die-two'),b);render();}
 async function init(){try{const r=await Promise.all([fetch(DATA_URL),fetch(REGION_URL)]);if(!r[0].ok||!r[1].ok)throw new Error('Données indisponibles');data=await r[0].json();region=await r[1].json();if(data.period.months!==312||data.period.end!=='2025-12')throw new Error('Période incomplète');render();setDie($('die-one'),0);setDie($('die-two'),0);}catch(e){console.error(e);$('story-text').textContent='Impossible de charger le plateau et ses données. Vérifie que les fichiers du site sont bien publiés.';$('roll-button').disabled=true;}}
 $('roll-button').addEventListener('click',roll);
-$('new-game').addEventListener('click',()=>{position=0;turn=0;busy=false;$('journal').innerHTML='<li class="journal-empty">Tes étapes apparaîtront ici après le premier lancer.</li>';$('dice-total').textContent='—';setDie($('die-one'),0);setDie($('die-two'),0);render();});
+$('new-game').addEventListener('click',()=>{if(busy)return;position=0;turn=0;$('journal').innerHTML='<li class="journal-empty">Tes étapes apparaîtront ici après le premier lancer.</li>';$('dice-total').textContent='—';setDie($('die-one'),0);setDie($('die-two'),0);render();});
 const dialog=$('rules-dialog');$('rules-open').addEventListener('click',()=>dialog.showModal());$('rules-open-bottom').addEventListener('click',()=>dialog.showModal());dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
 init();
