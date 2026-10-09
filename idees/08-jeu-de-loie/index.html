@@ -2,64 +2,93 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f3e8">
-  <meta name="description" content="Un jeu de l’oie des stations hydrologiques du Grand Est : lance les dés et traverse les mois de janvier 2000 à décembre 2025.">
-  <title>Les dés de l’eau · DataGrandEst 2026</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#e7e9df">
+  <meta name="description" content="Un jeu de l’oie cartographique : lance les dés, traverse le Grand Est et découvre 26 ans d’observations de l’eau, station après station.">
+  <title>La grande traversée de l’eau · DataGrandEst 2026</title>
   <link rel="stylesheet" href="jeu.css">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="../../index.html"><span class="brand-mark">≈</span> Les rythmes de l’eau</a>
-    <a class="back" href="../../index.html">← Toutes les pistes</a>
+    <a class="brand" href="../../index.html"><span class="brand-mark">≈</span><span>Les rythmes de l’eau</span></a>
+    <div class="top-center"><span class="edition">CARNET DE VOYAGE</span><span class="top-date" id="top-date">JANVIER 2000</span></div>
+    <div class="top-actions"><span class="progress-label"><b id="year-count">Année 1 / 26</b><i><u id="year-progress"></u></i></span><button class="rules-open" id="rules-open" type="button">Comment jouer&nbsp; <b>?</b></button><a class="back" href="../../index.html">Quitter ↗</a></div>
   </header>
-  <main>
-    <section class="intro">
-      <div class="eyebrow">Piste 08 · le jeu des stations</div>
-      <h1>Les dés <em>de l’eau</em></h1>
-      <p>Deux dés, 312 mois et un tour du Grand Est. À chaque arrêt, la météo observée dans une station change la partie.</p>
-      <div class="time-span"><span>JAN. 2000</span><i></i><span>DÉC. 2025</span><b>26 ans de données mensuelles</b></div>
-    </section>
 
-    <section class="play-layout" aria-label="Jeu des stations">
-      <div class="play-column">
-        <article class="current-card">
-          <div class="current-heading"><div><div class="eyebrow">Case actuelle · <span id="position">1 / 312</span></div><h2 id="month-title">Janvier 2000</h2></div><div class="current-badge" id="current-icon">🌧️</div></div>
-          <div class="station-line"><span class="station-dot"></span><div><strong id="station-name">Chargement…</strong><small id="station-meta"></small></div></div>
-          <div class="weather-note" id="event-note" aria-live="polite">Les dés sont prêts. À toi de jouer.</div>
-          <div class="metrics">
-            <div class="metric"><span>Température</span><strong id="temp">—</strong><small>moyenne du mois · °C</small></div>
-            <div class="metric"><span>Pluie</span><strong id="rain">—</strong><small>cumul mensuel · mm</small></div>
-            <div class="metric"><span>Neige</span><strong id="snow">—</strong><small>cumul fourni</small></div>
-            <div class="metric"><span>Débit</span><strong id="flow">—</strong><small>valeur de la série source</small></div>
-            <div class="metric"><span>Sol</span><strong id="soil">—</strong><small>indice d’humidité</small></div>
-          </div>
-        </article>
-
-        <article class="dice-card">
-          <div class="dice-copy"><div class="eyebrow">À toi de lancer</div><h2>Combien de mois ?</h2><p id="turn-hint">Additionne les deux dés : tu avances de 2 à 12 mois.</p></div>
-          <div class="dice-row" aria-live="polite"><div class="die" id="die-one">⚀</div><span>+</span><div class="die" id="die-two">⚀</div><strong id="roll-total">2</strong></div>
-          <div class="button-row"><button class="roll-button" id="roll-button" type="button">Lancer les dés <span>↗</span></button><button class="reset-button" id="reset-button" type="button">Recommencer</button></div>
-          <div class="rule-line"><span>Règle de la case</span><strong id="rule-status">Aucun effet en attente</strong></div>
-        </article>
+  <main class="app">
+    <section class="scene-layout">
+      <div class="scene">
+        <div class="scene-wash"></div>
+        <div class="scene-head"><div><div class="eyebrow">LA GRANDE TRAVERSÉE</div><h1>Le jeu de <em>l’eau</em></h1></div><div class="scene-stamp"><strong>26</strong><span>années<br>de voyage</span></div></div>
+        <div class="map-key"><span><i class="key-water"></i>stations de la Marne · liaison schématique</span><span><i class="key-route"></i>liaisons du jeu</span><span><i class="key-dot"></i>station hydrométrique</span></div>
+        <div class="map-frame">
+          <svg id="map" viewBox="0 0 1000 600" role="img" aria-label="Plateau illustré sur la carte du Grand Est, avec les étapes du jeu"></svg>
+          <div class="map-weather" id="map-weather" aria-hidden="true"></div>
+          <div class="map-location" id="map-location"><span>ÉTAPE 01</span><strong>Épinal</strong></div>
+          <div class="map-north" aria-hidden="true"><b>N</b><span>↑</span></div>
+        </div>
+        <div class="route-caption"><span><b id="route-stop">01</b> / 13 étapes</span><span>Le parcours est un circuit de jeu entre stations, pas un cours d’eau continu.</span></div>
+        <div class="station-ribbon" id="station-ribbon" aria-label="Stations du circuit"></div>
       </div>
 
-      <aside class="map-card">
-        <div class="map-head"><div><div class="eyebrow">Le tour des stations</div><h2>Grand Est</h2></div><span class="map-live"><i></i> météo du mois</span></div>
-        <div class="map-wrap" id="map-wrap"><svg id="station-map" viewBox="0 0 560 520" role="img" aria-label="Stations hydrologiques du circuit dans le Grand Est"></svg><div class="weather-layer" id="weather-layer" aria-hidden="true"></div><div class="map-caption" id="map-caption">Le pion rejoint la station active</div></div>
-        <div class="map-legend"><span><i class="legend-station"></i>stations du circuit</span><span><i class="legend-player">●</i>ta case actuelle</span></div>
-        <p class="map-footnote">Les stations composent un circuit de jeu régional. Les pointillés indiquent l’ordre des étapes, pas le tracé continu d’un cours d’eau.</p>
+      <aside class="side">
+        <section class="turn-card">
+          <div class="turn-top"><div><div class="eyebrow">TON CARNET DE BORD</div><div class="date-large" id="month-title">Janvier 2000</div></div><div class="turn-count"><span>TOUR</span><b id="turn-number">01</b></div></div>
+          <div class="station-heading"><span class="pin">✳</span><div><strong id="station-name">Épinal</strong><small id="station-subtitle">La Moselle · Vosges</small></div></div>
+          <div class="story" aria-live="polite"><div class="story-tag" id="story-tag">LE VOYAGE COMMENCE</div><p id="story-text">La première goutte quitte les Vosges. À chaque lancer, les dés feront avancer le calendrier et le pion vers une nouvelle station.</p></div>
+          <div class="data-title"><span>CE QUE RACONTE LA STATION</span><span id="data-period">jan. 2000</span></div>
+          <div class="data-grid">
+            <div class="data-cell temp"><span>Température</span><b id="temp">—</b><small>moy. mensuelle · °C</small></div>
+            <div class="data-cell rain"><span>Pluie</span><b id="rain">—</b><small>cumul mensuel · mm</small></div>
+            <div class="data-cell snow"><span>Neige</span><b id="snow">—</b><small>valeur de la série</small></div>
+            <div class="data-cell flow"><span>Débit</span><b id="flow">—</b><small>valeur de la série source</small></div>
+            <div class="data-cell soil"><span>Humidité du sol</span><b id="soil">—</b><small>indice fourni</small></div>
+          </div>
+          <div class="event-banner" id="event-banner"><span class="event-icon">○</span><span><b id="event-title">Eau calme</b><small id="event-description">Aucun effet spécial sur cette case.</small></span><span class="event-next" id="event-next"></span></div>
+          <div class="dice-area">
+            <div class="dice-instruction"><div class="eyebrow">À TOI DE JOUER</div><p id="dice-instruction">Lance deux dés : leur somme fait avancer le voyage de 2 à 12 mois.</p></div>
+            <div class="dice-cup" aria-label="Résultat des deux dés"><div class="die" id="die-one"><span></span></div><div class="die" id="die-two"><span></span></div><strong id="dice-total">—</strong></div>
+            <button class="roll-button" id="roll-button" type="button"><span class="button-dice">⚄</span><span id="roll-label">Lancer les dés</span><span class="button-arrow">→</span></button>
+            <button class="new-game" id="new-game" type="button">Recommencer le voyage</button>
+          </div>
+        </section>
+        <section class="journal-card">
+          <div class="journal-head"><div><div class="eyebrow">LES DERNIERS TOURS</div><h2>Journal de route</h2></div><span id="journal-total">Départ</span></div>
+          <ol id="journal"><li class="journal-empty">Tes étapes apparaîtront ici après le premier lancer.</li></ol>
+        </section>
       </aside>
     </section>
 
-    <section class="board-section">
-      <div class="board-title"><div><div class="eyebrow">Le plateau chronologique</div><h2>312 cases, mois après mois</h2></div><p>Les couleurs montrent les événements repérés dans les données. Clique sur un mois pour explorer son état.</p></div>
-      <div class="board-legend"><span><i class="legend-normal"></i>mois ordinaire</span><span><i class="legend-flood"></i>fortes pluies</span><span><i class="legend-snow"></i>neige</span><span><i class="legend-low"></i>débit bas + sol sec</span><span><i class="legend-soil"></i>sol humide</span></div>
-      <div class="board" id="board" aria-label="Plateau de jeu, janvier 2000 à décembre 2025"></div>
-      <div class="board-ends"><span>Départ · janvier 2000</span><span>Arrivée · décembre 2025</span></div>
+    <section class="reading-layout">
+      <article class="chart-card">
+        <div class="chart-heading"><div><div class="eyebrow">26 ANS À CETTE STATION</div><h2>La mémoire de l’eau</h2></div><div class="chart-legend"><span><i class="line-legend"></i>débit · échelle propre</span><span><i class="bar-legend"></i>pluie mensuelle</span></div></div>
+        <p class="chart-explain" id="chart-explain">Le trait et les barres utilisent des échelles séparées. La verticale indique le mois du voyage.</p>
+        <svg class="history-chart" id="history-chart" viewBox="0 0 960 174" role="img" aria-label="Graphique historique mensuel du débit et de la pluie à la station"></svg>
+        <div class="chart-years"><span>2000</span><span>2005</span><span>2010</span><span>2015</span><span>2020</span><span>2025</span></div>
+      </article>
+      <article class="how-card">
+        <div class="eyebrow">LES RÈGLES DE LA PARTIE</div><h2>Le hasard lance.<br><em>La météo répond.</em></h2>
+        <ol><li><b>01</b><span>Lance les deux dés : tu avances de leur somme en mois.</span></li><li><b>02</b><span>À chaque mois, le pion passe à la station suivante du circuit.</span></li><li><b>03</b><span>Une météo remarquable change le prochain lancer. Découvre pourquoi dans ton carnet.</span></li></ol>
+        <div class="finish-note"><span>🏁</span><span><b>Objectif</b><br>Arriver à décembre 2025 en lisant le cycle de l’eau.</span></div>
+        <button type="button" class="rules-link" id="rules-open-bottom">Toutes les règles &amp; les données <b>↗</b></button>
+      </article>
     </section>
-    <footer>Une proposition de jeu exploratoire · seuils calculés par station et par mois de l’année · données manquantes affichées comme telles.</footer>
+    <footer>Données du concours DataGrandEst 2026 · Observations historiques agrégées au mois · Aucun événement n’est une prévision ou une alerte de crue/sécheresse.</footer>
   </main>
+
+  <dialog id="rules-dialog" class="rules-dialog">
+    <form method="dialog"><button class="dialog-close" aria-label="Fermer">×</button></form>
+    <div class="eyebrow">AVANT DE PARTIR</div><h2>Comment marche<br><em>le jeu de l’eau ?</em></h2>
+    <p class="dialog-lead">Tu incarnes une goutte qui traverse 26 années d’observations. Les dés décident du temps parcouru ; les mesures de chaque station racontent le décor.</p>
+    <div class="rules-list">
+      <div><span>01</span><p><b>Un lancer = des mois</b><br>Deux dés classiques. Leur somme (2 à 12) fait avancer le calendrier du même nombre de mois.</p></div>
+      <div><span>02</span><p><b>Une étape par mois</b><br>Le pion suit un circuit ludique de 13 stations réparties entre la Moselle, la Marne et l’Ill. Ce tracé relie les sites pour le jeu, ce n’est pas un réseau hydrographique.</p></div>
+      <div><span>03</span><p><b>Les cases météo ont un effet</b><br>Pluie remarquable : +1 mois au prochain lancer. Neige remarquable : −1 mois. Étiage observé : −2 mois. Sol très humide : +1 mois. L’effet apparaît avant le lancer et s’applique une seule fois.</p></div>
+      <div><span>04</span><p><b>Lire les mesures</b><br>Pluie et neige sont les cumuls mensuels fournis ; température et humidité sont des moyennes. Le débit et l’indice d’humidité gardent les valeurs source, sans unité ajoutée quand elle n’est pas établie.</p></div>
+      <div><span>05</span><p><b>Comprendre les événements</b><br>Pluie, neige et humidité du sol dépassent leur 85ᵉ percentile ; un étiage réunit un débit et une humidité du sol sous leur 15ᵉ percentile. Les seuils sont comparés au même mois de l’année à la même station, sur 2000–2025.</p></div>
+    </div>
+    <p class="dialog-foot">Une case sans mesure reste vide (—). Les animations de pluie, neige et brume traduisent les observations du mois actif : elles ne sont pas des prévisions météo. Les sites et séries viennent des données fournies au concours DataGrandEst 2026 ; les stations sont ordonnées pour le jeu.</p>
+  </dialog>
   <script src="jeu.js" defer></script>
 </body>
 </html>
